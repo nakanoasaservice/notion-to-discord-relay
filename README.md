@@ -2,6 +2,8 @@
 
 Automatically forward Notion webhook events to Discord channels with beautifully formatted embeds — powered by Discord's incoming webhooks.
 
+**🚀 Hosted instance (recommended): <https://notion-to-discord-relay.naas.workers.dev/>**
+
 Built on [Cloudflare Workers](https://workers.cloudflare.com/) with [Hono](https://hono.dev/). A webhook-based sibling of [notion-to-discord-bot](https://github.com/nakanoasaservice/notion-to-discord-bot), modeled after [notion-to-google-chat-relay](https://github.com/nakanoasaservice/notion-to-google-chat-relay)'s design.
 
 ## How it works
@@ -22,7 +24,7 @@ Set that URL as a "Send webhook" action in a Notion database automation. Every t
 ## Quick Start
 
 1. **Create a Discord webhook**: In Discord, open the channel's **Settings** → **Integrations** → **Webhooks** → **New Webhook** → name it → copy the webhook URL.
-2. **Generate your URL**: Open the generator page (your deployed instance, or `bun run dev` locally), paste the webhook URL, and optionally set an embed title.
+2. **Generate your URL**: Open the [generator page](https://notion-to-discord-relay.naas.workers.dev/), paste the webhook URL, and optionally set an embed title.
 3. **Configure Notion**: In your Notion database, go to **Settings → Automations → New action → Send webhook**, and paste the generated URL.
 
 > [!WARNING]
@@ -46,7 +48,7 @@ Title, rich text, URL, select, multi-select, date, checkbox, email, phone, numbe
 
 ## Self-hosting
 
-Click the button below — Cloudflare will deploy it to your own Cloudflare Workers account in just a few clicks:
+For most users the [hosted instance](https://notion-to-discord-relay.naas.workers.dev/) is all you need. If you prefer to run your own private instance, click the button below — Cloudflare will deploy it to your own Cloudflare Workers account in just a few clicks:
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https%3A%2F%2Fgithub.com%2Fnakanoasaservice%2Fnotion-to-discord-relay)
 
