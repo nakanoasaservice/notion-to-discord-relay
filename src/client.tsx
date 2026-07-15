@@ -239,6 +239,132 @@ function App() {
 						to this worker, which formats it as an embed and posts it to your
 						Discord channel using the channel's incoming webhook.
 					</p>
+					<svg
+						viewBox="0 0 640 110"
+						role="img"
+						aria-label="Data flow: Notion sends a webhook to this relay, which posts to Discord via a Discord webhook"
+						style={{
+							display: "block",
+							width: "100%",
+							maxWidth: "640px",
+							height: "auto",
+							margin: "1.5rem auto 0",
+						}}
+					>
+						<title>
+							Notion to this relay via Notion webhook, then to Discord via
+							Discord webhook
+						</title>
+						<defs>
+							<marker
+								id="arrowhead"
+								markerWidth="8"
+								markerHeight="8"
+								refX="7"
+								refY="4"
+								orient="auto"
+							>
+								<path d="M0 0L8 4L0 8z" fill="#666" />
+							</marker>
+						</defs>
+
+						{/* Notion */}
+						<rect
+							x="10"
+							y="30"
+							width="130"
+							height="50"
+							rx="8"
+							fill="#fff"
+							stroke="#37352f"
+							strokeWidth="1.5"
+						/>
+						<text
+							x="75"
+							y="60"
+							textAnchor="middle"
+							fontSize="16"
+							fontWeight="bold"
+							fill="#37352f"
+						>
+							Notion
+						</text>
+
+						{/* Notion webhook arrow */}
+						<line
+							x1="145"
+							y1="55"
+							x2="248"
+							y2="55"
+							stroke="#666"
+							strokeWidth="1.5"
+							markerEnd="url(#arrowhead)"
+						/>
+						<text x="200" y="43" textAnchor="middle" fontSize="11" fill="#666">
+							Notion webhook
+						</text>
+
+						{/* This relay */}
+						<rect
+							x="255"
+							y="30"
+							width="130"
+							height="50"
+							rx="8"
+							fill="#e8f5e9"
+							stroke="#2e7d32"
+							strokeWidth="1.5"
+						/>
+						<text
+							x="320"
+							y="55"
+							textAnchor="middle"
+							fontSize="15"
+							fontWeight="bold"
+							fill="#2e7d32"
+						>
+							This relay
+						</text>
+						<text x="320" y="71" textAnchor="middle" fontSize="10" fill="#666">
+							formats as embed
+						</text>
+
+						{/* Discord webhook arrow */}
+						<line
+							x1="390"
+							y1="55"
+							x2="493"
+							y2="55"
+							stroke="#666"
+							strokeWidth="1.5"
+							markerEnd="url(#arrowhead)"
+						/>
+						<text x="445" y="43" textAnchor="middle" fontSize="11" fill="#666">
+							Discord webhook
+						</text>
+
+						{/* Discord */}
+						<rect
+							x="500"
+							y="30"
+							width="130"
+							height="50"
+							rx="8"
+							fill="#fff"
+							stroke="#5865f2"
+							strokeWidth="1.5"
+						/>
+						<text
+							x="565"
+							y="60"
+							textAnchor="middle"
+							fontSize="16"
+							fontWeight="bold"
+							fill="#5865f2"
+						>
+							Discord
+						</text>
+					</svg>
 				</section>
 
 				<section style={{ marginBottom: "3rem" }}>
@@ -450,7 +576,11 @@ function App() {
 								disabled={!parsed.ok}
 								style={{
 									padding: "0.75rem",
-									backgroundColor: !parsed.ok ? "#a5d6a7" : "#2e7d32",
+									backgroundColor: !parsed.ok
+										? "#a5d6a7"
+										: copyState === "failed"
+											? "#d32f2f"
+											: "#2e7d32",
 									color: "white",
 									border: "none",
 									borderRadius: "4px",
@@ -461,43 +591,60 @@ function App() {
 									minWidth: "44px",
 									width: "44px",
 								}}
-								aria-label="Copy URL"
+								aria-label={
+									copyState === "copied"
+										? "Copied"
+										: copyState === "failed"
+											? "Failed to copy"
+											: "Copy URL"
+								}
 							>
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									aria-label="Copy URL"
-								>
-									<title>Copy URL</title>
-									<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-									<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-								</svg>
+								{copyState === "copied" ? (
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<title>Copied</title>
+										<path d="M20 6L9 17l-5-5" />
+									</svg>
+								) : copyState === "failed" ? (
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<title>Failed to copy</title>
+										<path d="M18 6L6 18M6 6l12 12" />
+									</svg>
+								) : (
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<title>Copy URL</title>
+										<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+										<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+									</svg>
+								)}
 							</button>
 						</div>
-						<small
-							style={{
-								color: copyState === "failed" ? "#d32f2f" : "#2e7d32",
-								display: "block",
-								marginTop: "0.5rem",
-								fontWeight: "bold",
-								visibility: copyState !== "idle" ? "visible" : "hidden",
-								opacity: copyState !== "idle" ? 1 : 0,
-								transition: "opacity 0.2s ease-in-out",
-								minHeight: "1.2rem",
-							}}
-						>
-							{copyState === "copied"
-								? "Copied!"
-								: copyState === "failed"
-									? "Failed to copy"
-									: ""}
-						</small>
 					</div>
 				</section>
 			</main>
