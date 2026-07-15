@@ -450,7 +450,11 @@ function App() {
 								disabled={!parsed.ok}
 								style={{
 									padding: "0.75rem",
-									backgroundColor: !parsed.ok ? "#a5d6a7" : "#2e7d32",
+									backgroundColor: !parsed.ok
+										? "#a5d6a7"
+										: copyState === "failed"
+											? "#d32f2f"
+											: "#2e7d32",
 									color: "white",
 									border: "none",
 									borderRadius: "4px",
@@ -461,43 +465,60 @@ function App() {
 									minWidth: "44px",
 									width: "44px",
 								}}
-								aria-label="Copy URL"
+								aria-label={
+									copyState === "copied"
+										? "Copied"
+										: copyState === "failed"
+											? "Failed to copy"
+											: "Copy URL"
+								}
 							>
-								<svg
-									width="20"
-									height="20"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									aria-label="Copy URL"
-								>
-									<title>Copy URL</title>
-									<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-									<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-								</svg>
+								{copyState === "copied" ? (
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<title>Copied</title>
+										<path d="M20 6L9 17l-5-5" />
+									</svg>
+								) : copyState === "failed" ? (
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<title>Failed to copy</title>
+										<path d="M18 6L6 18M6 6l12 12" />
+									</svg>
+								) : (
+									<svg
+										width="20"
+										height="20"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										strokeWidth="2"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+									>
+										<title>Copy URL</title>
+										<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+										<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+									</svg>
+								)}
 							</button>
 						</div>
-						<small
-							style={{
-								color: copyState === "failed" ? "#d32f2f" : "#2e7d32",
-								display: "block",
-								marginTop: "0.5rem",
-								fontWeight: "bold",
-								visibility: copyState !== "idle" ? "visible" : "hidden",
-								opacity: copyState !== "idle" ? 1 : 0,
-								transition: "opacity 0.2s ease-in-out",
-								minHeight: "1.2rem",
-							}}
-						>
-							{copyState === "copied"
-								? "Copied!"
-								: copyState === "failed"
-									? "Failed to copy"
-									: ""}
-						</small>
 					</div>
 				</section>
 			</main>
