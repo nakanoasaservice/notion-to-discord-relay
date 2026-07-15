@@ -11,17 +11,12 @@ type Property = RemoveId<PageObjectResponse["properties"][number]>;
 
 type DateResponse = Extract<Property, { type: "date" }>["date"];
 
-const TRUNCATION_SUFFIX = "…";
-
 // Discord embed fields have hard character limits (title/name: 256, value: 1024).
 // Truncate by code point so we never split a surrogate pair (e.g. emoji).
 export function truncate(text: string, maxLength: number): string {
 	const chars = [...text];
 	if (chars.length <= maxLength) return text;
-	return (
-		chars.slice(0, maxLength - TRUNCATION_SUFFIX.length).join("") +
-		TRUNCATION_SUFFIX
-	);
+	return `${chars.slice(0, maxLength - 1).join("")}…`;
 }
 
 function formatPerson(
@@ -33,16 +28,30 @@ function formatPerson(
 	return person.id;
 }
 
+const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function formatSingleDate(value: string): string {
+	const parsed = new Date(value);
+	if (Number.isNaN(parsed.getTime())) return value;
+
+	if (DATE_ONLY_PATTERN.test(value)) {
+		// Date-only values are parsed as UTC midnight; a Discord timestamp would
+		// render as the previous day for viewers west of UTC, so keep it as text.
+		return value;
+	}
+
+	// Discord timestamps render in the viewer's local time zone and locale.
+	return `<t:${Math.floor(parsed.getTime() / 1000)}:F>`;
+}
+
 function formatDate(date: DateResponse): string {
 	if (!date) return "[No Date]";
 
-	const dateStr = date.end ? `${date.start} - ${date.end}` : date.start;
-
-	if (date.time_zone) {
-		return `${dateStr} (${date.time_zone})`;
+	if (date.end) {
+		return `${formatSingleDate(date.start)} - ${formatSingleDate(date.end)}`;
 	}
 
-	return dateStr;
+	return formatSingleDate(date.start);
 }
 
 function formatRichText(richText: RichTextItemResponse): string {
@@ -108,9 +117,13 @@ export function formatProperty(property: Property): string {
 		case "status":
 			return property.status?.name ?? "[No Status]";
 		case "created_time":
-			return property.created_time ?? "[No Time]";
+			return property.created_time
+				? formatSingleDate(property.created_time)
+				: "[No Time]";
 		case "last_edited_time":
-			return property.last_edited_time ?? "[No Time]";
+			return property.last_edited_time
+				? formatSingleDate(property.last_edited_time)
+				: "[No Time]";
 		case "created_by":
 			return formatPerson(property.created_by);
 		case "last_edited_by":
