@@ -7,6 +7,14 @@ type Property = Parameters<typeof formatProperty>[0];
 function richText(
 	content: string,
 	link: { url: string } | null = null,
+	annotations: Partial<{
+		bold: boolean;
+		italic: boolean;
+		strikethrough: boolean;
+		underline: boolean;
+		code: boolean;
+		color: string;
+	}> = {},
 ): object {
 	return {
 		type: "text",
@@ -18,6 +26,7 @@ function richText(
 			underline: false,
 			code: false,
 			color: "default",
+			...annotations,
 		},
 		plain_text: content,
 		href: link?.url ?? null,
@@ -41,6 +50,73 @@ describe("formatProperty", () => {
 		} as unknown as Property;
 
 		expect(formatProperty(property)).toBe("plain text & stuff");
+	});
+
+	it("renders each annotation as its Discord Markdown equivalent", () => {
+		const cases: [string, object][] = [
+			["bold", { bold: true }],
+			["italic", { italic: true }],
+			["strikethrough", { strikethrough: true }],
+			["underline", { underline: true }],
+			["code", { code: true }],
+		];
+
+		for (const [annotation, annotations] of cases) {
+			const property = {
+				type: "rich_text",
+				rich_text: [richText("styled", null, annotations)],
+			} as unknown as Property;
+
+			const expected: Record<string, string> = {
+				bold: "**styled**",
+				italic: "*styled*",
+				strikethrough: "~~styled~~",
+				underline: "__styled__",
+				code: "`styled`",
+			};
+
+			expect(formatProperty(property)).toBe(expected[annotation]);
+		}
+	});
+
+	it("combines multiple annotations, innermost code first", () => {
+		const property = {
+			type: "rich_text",
+			rich_text: [
+				richText("styled", null, { bold: true, italic: true, code: true }),
+			],
+		} as unknown as Property;
+
+		expect(formatProperty(property)).toBe("***`styled`***");
+	});
+
+	it("keeps surrounding whitespace outside the Markdown markers", () => {
+		const property = {
+			type: "rich_text",
+			rich_text: [richText("  styled  ", null, { bold: true })],
+		} as unknown as Property;
+
+		expect(formatProperty(property)).toBe("  **styled**  ");
+	});
+
+	it("ignores the color annotation, which has no Discord equivalent", () => {
+		const property = {
+			type: "rich_text",
+			rich_text: [richText("colored", null, { color: "red" })],
+		} as unknown as Property;
+
+		expect(formatProperty(property)).toBe("colored");
+	});
+
+	it("wraps annotated links in the Markdown marker", () => {
+		const property = {
+			type: "rich_text",
+			rich_text: [
+				richText("Docs", { url: "https://example.com" }, { bold: true }),
+			],
+		} as unknown as Property;
+
+		expect(formatProperty(property)).toBe("**[Docs](https://example.com)**");
 	});
 
 	it("returns the raw URL for url properties", () => {
