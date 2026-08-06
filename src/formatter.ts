@@ -54,7 +54,7 @@ function formatDate(date: DateResponse): string {
 	return formatSingleDate(date.start);
 }
 
-function formatRichText(richText: RichTextItemResponse): string {
+function formatRichTextValue(richText: RichTextItemResponse): string {
 	switch (richText.type) {
 		case "text":
 			if (richText.text.link) {
@@ -87,6 +87,36 @@ function formatRichText(richText: RichTextItemResponse): string {
 		default:
 			return `[Unsupported Rich Text Type: ${JSON.stringify(richText, null, 2)}]`;
 	}
+}
+
+// Discord's markdown markers don't render if they touch surrounding whitespace
+// (e.g. "** bold**" stays literal), so annotations wrap only the trimmed core,
+// leaving any leading/trailing whitespace untouched outside the markers.
+// Notion's `color` annotation has no reasonable Discord equivalent and is skipped.
+function applyRichTextAnnotations(
+	text: string,
+	annotations: RichTextItemResponse["annotations"],
+): string {
+	const leading = text.match(/^\s*/)?.[0] ?? "";
+	const trailing = text.match(/\s*$/)?.[0] ?? "";
+	const core = text.slice(leading.length, text.length - trailing.length);
+	if (!core) return text;
+
+	let formatted = core;
+	if (annotations.code) formatted = `\`${formatted}\``;
+	if (annotations.bold) formatted = `**${formatted}**`;
+	if (annotations.italic) formatted = `*${formatted}*`;
+	if (annotations.strikethrough) formatted = `~~${formatted}~~`;
+	if (annotations.underline) formatted = `__${formatted}__`;
+
+	return leading + formatted + trailing;
+}
+
+function formatRichText(richText: RichTextItemResponse): string {
+	return applyRichTextAnnotations(
+		formatRichTextValue(richText),
+		richText.annotations,
+	);
 }
 
 export function formatProperty(property: Property): string {
