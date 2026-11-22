@@ -31,9 +31,7 @@ function parseWebhookUrl(input: string): ParsedWebhook {
 // Reconstruct the original Discord webhook URL from our worker URL so
 // opening a generated URL pre-fills the form (URL = settings page)
 function getWebhookUrlFromLocation(): string {
-	const [webhookId, webhookToken] = window.location.pathname
-		.replace(/^\//, "")
-		.split("/");
+	const [webhookId, webhookToken] = window.location.pathname.replace(/^\//, "").split("/");
 
 	if (!webhookId || !webhookToken) return "";
 
@@ -99,19 +97,9 @@ function DataFlowDiagram() {
 				margin: "1.5rem auto 0",
 			}}
 		>
-			<title>
-				Notion to this relay via Notion webhook, then to Discord via Discord
-				webhook
-			</title>
+			<title>Notion to this relay via Notion webhook, then to Discord via Discord webhook</title>
 			<defs>
-				<marker
-					id="arrowhead"
-					markerWidth="8"
-					markerHeight="8"
-					refX="7"
-					refY="4"
-					orient="auto"
-				>
+				<marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
 					<path d="M0 0L8 4L0 8z" fill="#666" />
 				</marker>
 			</defs>
@@ -127,14 +115,7 @@ function DataFlowDiagram() {
 				stroke="#37352f"
 				strokeWidth="1.5"
 			/>
-			<text
-				x="75"
-				y="60"
-				textAnchor="middle"
-				fontSize="16"
-				fontWeight="bold"
-				fill="#37352f"
-			>
+			<text x="75" y="60" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#37352f">
 				Notion
 			</text>
 
@@ -163,14 +144,7 @@ function DataFlowDiagram() {
 				stroke="#2e7d32"
 				strokeWidth="1.5"
 			/>
-			<text
-				x="320"
-				y="55"
-				textAnchor="middle"
-				fontSize="15"
-				fontWeight="bold"
-				fill="#2e7d32"
-			>
+			<text x="320" y="55" textAnchor="middle" fontSize="15" fontWeight="bold" fill="#2e7d32">
 				This relay
 			</text>
 			<text x="320" y="71" textAnchor="middle" fontSize="10" fill="#666">
@@ -202,14 +176,7 @@ function DataFlowDiagram() {
 				stroke="#5865f2"
 				strokeWidth="1.5"
 			/>
-			<text
-				x="565"
-				y="60"
-				textAnchor="middle"
-				fontSize="16"
-				fontWeight="bold"
-				fill="#5865f2"
-			>
+			<text x="565" y="60" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#5865f2">
 				Discord
 			</text>
 		</svg>
@@ -272,13 +239,9 @@ function CopyIcon() {
 }
 
 function App() {
-	const [webhookUrl, setWebhookUrl] = useState(() =>
-		getWebhookUrlFromLocation(),
-	);
+	const [webhookUrl, setWebhookUrl] = useState(() => getWebhookUrlFromLocation());
 	const [title, setTitle] = useState(() => getTitleFromUrl());
-	const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">(
-		"idle",
-	);
+	const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
 
 	const parsed = useMemo(() => parseWebhookUrl(webhookUrl), [webhookUrl]);
 	const isValid = webhookUrl === "" || parsed.ok;
@@ -353,9 +316,7 @@ function App() {
 			}}
 		>
 			<header style={{ marginBottom: "2rem", textAlign: "center" }}>
-				<h1 style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>
-					Notion to Discord Relay
-				</h1>
+				<h1 style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>Notion to Discord Relay</h1>
 				<div
 					style={{
 						display: "flex",
@@ -409,57 +370,44 @@ function App() {
 						marginBottom: "0.5rem",
 					}}
 				>
-					👆 Click to deploy your own private instance to Cloudflare Workers
-					instantly.
+					👆 Click to deploy your own private instance to Cloudflare Workers instantly.
 				</p>
 				<p style={{ fontSize: "1.2rem", color: "#666" }}>
-					Automatically forward Notion webhook events to Discord channels with
-					beautifully formatted embeds.
+					Automatically forward Notion webhook events to Discord channels with beautifully formatted
+					embeds.
 				</p>
 			</header>
 
 			<main>
 				<section style={{ marginBottom: "3rem" }}>
-					<h2
-						style={{ borderBottom: "1px solid #eee", paddingBottom: "0.5rem" }}
-					>
-						How it works
-					</h2>
+					<h2 style={{ borderBottom: "1px solid #eee", paddingBottom: "0.5rem" }}>How it works</h2>
 					<p>
-						This relay sits between Notion and Discord. When you configure a
-						webhook in Notion (e.g., from a database automation), it sends data
-						to this worker, which formats it as an embed and posts it to your
-						Discord channel using the channel's incoming webhook.
+						This relay sits between Notion and Discord. When you configure a webhook in Notion
+						(e.g., from a database automation), it sends data to this worker, which formats it as an
+						embed and posts it to your Discord channel using the channel's incoming webhook.
 					</p>
 					<DataFlowDiagram />
 				</section>
 
 				<section style={{ marginBottom: "3rem" }}>
-					<h2
-						style={{ borderBottom: "1px solid #eee", paddingBottom: "0.5rem" }}
-					>
-						Setup Guide
-					</h2>
+					<h2 style={{ borderBottom: "1px solid #eee", paddingBottom: "0.5rem" }}>Setup Guide</h2>
 					<ol style={{ paddingLeft: "1.5rem" }}>
 						<li style={{ marginBottom: "0.5rem" }}>
-							<strong>Create a Discord webhook:</strong> In Discord, open your
-							server's <em>Channel Settings</em> → <em>Integrations</em> →{" "}
-							<em>Webhooks</em> → <em>New Webhook</em>, give it a name, and copy
-							the webhook URL.
+							<strong>Create a Discord webhook:</strong> In Discord, open your server's{" "}
+							<em>Channel Settings</em> → <em>Integrations</em> → <em>Webhooks</em> →{" "}
+							<em>New Webhook</em>, give it a name, and copy the webhook URL.
 						</li>
 						<li style={{ marginBottom: "0.5rem" }}>
-							<strong>Generate your URL:</strong> Paste the webhook URL into the
-							form below and optionally set an embed title.
+							<strong>Generate your URL:</strong> Paste the webhook URL into the form below and
+							optionally set an embed title.
 						</li>
 						<li style={{ marginBottom: "0.5rem" }}>
-							<strong>Copy the generated URL:</strong> It contains your webhook
-							credentials, so treat it as secret — just like the webhook URL
-							itself.
+							<strong>Copy the generated URL:</strong> It contains your webhook credentials, so
+							treat it as secret — just like the webhook URL itself.
 						</li>
 						<li style={{ marginBottom: "0.5rem" }}>
-							<strong>Configure Notion:</strong> In your Notion database, go to
-							Settings → Automations → New action → Send webhook, and paste the
-							generated URL.
+							<strong>Configure Notion:</strong> In your Notion database, go to Settings →
+							Automations → New action → Send webhook, and paste the generated URL.
 						</li>
 					</ol>
 				</section>
@@ -507,9 +455,7 @@ function App() {
 								id="webhookUrl"
 								placeholder="https://discord.com/api/webhooks/.../..."
 								value={webhookUrl}
-								onInput={(e) =>
-									setWebhookUrl((e.target as HTMLInputElement).value)
-								}
+								onInput={(e) => setWebhookUrl((e.target as HTMLInputElement).value)}
 								style={{
 									width: "100%",
 									padding: "0.75rem",
@@ -554,10 +500,7 @@ function App() {
 								onInput={(e) => {
 									const target = e.currentTarget as HTMLTextAreaElement;
 									if (target) {
-										const valueWithoutNewlines = target.value.replace(
-											/\n/g,
-											"",
-										);
+										const valueWithoutNewlines = target.value.replace(/\n/g, "");
 										setTitle(valueWithoutNewlines);
 									}
 								}}
@@ -682,6 +625,6 @@ function App() {
 	);
 }
 
-// biome-ignore lint/style/noNonNullAssertion: root is guaranteed to be in the document
+// oxlint-disable-next-line typescript/no-non-null-assertion -- root is guaranteed to be in the document
 const root = document.getElementById("root")!;
 render(<App />, root);

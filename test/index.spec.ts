@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
 import app from "../src/index";
 
@@ -42,25 +42,19 @@ describe("Notion to Discord Relay worker", () => {
 			status: 200,
 			text: async () => "",
 		});
-		global.fetch = mockFetch as unknown as typeof global.fetch;
+		globalThis.fetch = mockFetch as unknown as typeof globalThis.fetch;
 	});
 
 	it("forwards the Notion payload as a Discord embed", async () => {
-		const response = await app.request(
-			"/AAAA1234/BBBB5678?title=Task%20Updated",
-			{
-				method: "POST",
-				body: JSON.stringify(notionPayload),
-			},
-		);
+		const response = await app.request("/AAAA1234/BBBB5678?title=Task%20Updated", {
+			method: "POST",
+			body: JSON.stringify(notionPayload),
+		});
 
 		expect(response.status).toBe(204);
 		expect(mockFetch).toHaveBeenCalledTimes(1);
 
-		const [calledUrl, init] = mockFetch.mock.calls[0] as [
-			URL | string,
-			RequestInit,
-		];
+		const [calledUrl, init] = mockFetch.mock.calls[0] as [URL | string, RequestInit];
 
 		const url = new URL(String(calledUrl));
 		expect(url.origin).toBe("https://discord.com");
@@ -72,14 +66,13 @@ describe("Notion to Discord Relay worker", () => {
 			"Content-Type": "application/json",
 		});
 
-		const body = JSON.parse(String(init.body));
+		if (typeof init.body !== "string") throw new Error("Expected a JSON request body");
+		const body = JSON.parse(init.body);
 		const embed = body.embeds[0];
 		expect(embed.title).toBe("Task Updated");
 		expect(embed.url).toBe("https://example.com");
 		expect(embed.color).toBe(0x2f3437);
-		expect(embed.fields).toEqual([
-			{ name: "name", value: "Test", inline: true },
-		]);
+		expect(embed.fields).toEqual([{ name: "name", value: "Test", inline: true }]);
 
 		expect(body.components).toEqual([
 			{
@@ -105,16 +98,14 @@ describe("Notion to Discord Relay worker", () => {
 		expect(response.status).toBe(204);
 
 		const init = mockFetch.mock.calls[0]?.[1] as RequestInit;
-		const body = JSON.parse(String(init.body));
+		if (typeof init.body !== "string") throw new Error("Expected a JSON request body");
+		const body = JSON.parse(init.body);
 		expect(body.embeds[0].title).toBeUndefined();
 	});
 
 	it("caps embed fields at Discord's 25-field limit", async () => {
 		const properties = Object.fromEntries(
-			Array.from({ length: 30 }, (_, i) => [
-				`prop-${i}`,
-				titleProperty(`value-${i}`),
-			]),
+			Array.from({ length: 30 }, (_, i) => [`prop-${i}`, titleProperty(`value-${i}`)]),
 		);
 
 		const response = await app.request("/AAAA1234/BBBB5678", {
@@ -127,7 +118,8 @@ describe("Notion to Discord Relay worker", () => {
 		expect(response.status).toBe(204);
 
 		const init = mockFetch.mock.calls[0]?.[1] as RequestInit;
-		const body = JSON.parse(String(init.body));
+		if (typeof init.body !== "string") throw new Error("Expected a JSON request body");
+		const body = JSON.parse(init.body);
 		expect(body.embeds[0].fields).toHaveLength(25);
 	});
 });

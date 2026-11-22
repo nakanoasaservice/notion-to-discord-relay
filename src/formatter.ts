@@ -14,6 +14,7 @@ type DateResponse = Extract<Property, { type: "date" }>["date"];
 // Discord embed fields have hard character limits (title/name: 256, value: 1024).
 // Truncate by code point so we never split a surrogate pair (e.g. emoji).
 export function truncate(text: string, maxLength: number): string {
+	// oxlint-disable-next-line typescript/no-misused-spread -- Preserve code-point-based truncation.
 	const chars = [...text];
 	if (chars.length <= maxLength) return text;
 	return `${chars.slice(0, maxLength - 1).join("")}…`;
@@ -113,10 +114,7 @@ function applyRichTextAnnotations(
 }
 
 function formatRichText(richText: RichTextItemResponse): string {
-	return applyRichTextAnnotations(
-		formatRichTextValue(richText),
-		richText.annotations,
-	);
+	return applyRichTextAnnotations(formatRichTextValue(richText), richText.annotations);
 }
 
 export function formatProperty(property: Property): string {
@@ -130,10 +128,7 @@ export function formatProperty(property: Property): string {
 		case "select":
 			return property.select?.name ?? "[No Selection]";
 		case "multi_select":
-			return (
-				property.multi_select?.map((select) => select.name).join(", ") ||
-				"[No Selections]"
-			);
+			return property.multi_select?.map((select) => select.name).join(", ") || "[No Selections]";
 		case "date":
 			return formatDate(property.date);
 		case "checkbox":
@@ -147,13 +142,9 @@ export function formatProperty(property: Property): string {
 		case "status":
 			return property.status?.name ?? "[No Status]";
 		case "created_time":
-			return property.created_time
-				? formatSingleDate(property.created_time)
-				: "[No Time]";
+			return property.created_time ? formatSingleDate(property.created_time) : "[No Time]";
 		case "last_edited_time":
-			return property.last_edited_time
-				? formatSingleDate(property.last_edited_time)
-				: "[No Time]";
+			return property.last_edited_time ? formatSingleDate(property.last_edited_time) : "[No Time]";
 		case "created_by":
 			return formatPerson(property.created_by);
 		case "last_edited_by":
@@ -217,10 +208,7 @@ export function formatProperty(property: Property): string {
 				case "date":
 					return formatDate(property.rollup.date);
 				case "array":
-					return (
-						property.rollup.array?.map(formatProperty).join(", ") ??
-						"[Empty Rollup Array]"
-					);
+					return property.rollup.array?.map(formatProperty).join(", ") ?? "[Empty Rollup Array]";
 				default:
 					return "[Unsupported Rollup Type]";
 			}
@@ -237,8 +225,7 @@ export function formatProperty(property: Property): string {
 		case "place":
 			return property.place
 				? property.place.name
-					? property.place.address == null ||
-						property.place.name === property.place.address
+					? property.place.address == null || property.place.name === property.place.address
 						? property.place.name
 						: `${property.place.name}\n${property.place.address}`
 					: property.place.address
