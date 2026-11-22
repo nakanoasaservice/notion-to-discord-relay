@@ -2,33 +2,40 @@
 	"name": "notion-to-discord-relay",
 	"version": "0.0.0",
 	"private": true,
-	"type": "module",
 	"license": "MIT",
+	"type": "module",
 	"scripts": {
-		"build": "vite build",
+		"build": "vp build",
 		"cf-typegen": "wrangler types",
 		"check-types": "tsc --noEmit",
-		"check:fix": "biome check --write",
-		"check": "biome check",
-		"deploy": "bun run build && wrangler deploy",
-		"dev": "vite dev",
-		"preview": "bun run build && vite preview",
+		"check:fix": "vp check --fix",
+		"check": "vp check",
+		"deploy": "pnpm run build && wrangler deploy",
+		"dev": "vp dev",
+		"preview": "pnpm run build && vp preview",
 		"start": "wrangler dev",
-		"test": "vitest"
+		"test": "vp test run"
 	},
 	"dependencies": {
 		"hono": "^4.13.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.11",
 		"@cloudflare/vite-plugin": "^1.54.1",
-		"@cloudflare/vitest-pool-workers": "^0.22.0",
+		"@cloudflare/vitest-plugin": "^1.8.4",
 		"@notionhq/client": "^5.26.0",
 		"@types/node": "^26.4.0",
 		"discord-api-types": "^0.38.54",
 		"typescript": "^7.0.2",
-		"vite": "^8.2.2",
-		"vitest": "^4.1.11",
+		"vite": "catalog:",
+		"vite-plus": "catalog:",
+		"vitest": "catalog:",
 		"wrangler": "^4.127.0"
-	}
+	},
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": "24.22.1"
+		}
+	},
+	"packageManager": "pnpm@12.21.0"
 }

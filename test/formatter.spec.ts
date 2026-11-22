@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 import { formatProperty, truncate } from "../src/formatter";
 
@@ -82,9 +82,7 @@ describe("formatProperty", () => {
 	it("combines multiple annotations, innermost code first", () => {
 		const property = {
 			type: "rich_text",
-			rich_text: [
-				richText("styled", null, { bold: true, italic: true, code: true }),
-			],
+			rich_text: [richText("styled", null, { bold: true, italic: true, code: true })],
 		} as unknown as Property;
 
 		expect(formatProperty(property)).toBe("***`styled`***");
@@ -111,9 +109,7 @@ describe("formatProperty", () => {
 	it("wraps annotated links in the Markdown marker", () => {
 		const property = {
 			type: "rich_text",
-			rich_text: [
-				richText("Docs", { url: "https://example.com" }, { bold: true }),
-			],
+			rich_text: [richText("Docs", { url: "https://example.com" }, { bold: true })],
 		} as unknown as Property;
 
 		expect(formatProperty(property)).toBe("**[Docs](https://example.com)**");
@@ -183,9 +179,7 @@ describe("formatProperty", () => {
 	});
 
 	it("falls back to bracketed placeholders for empty values", () => {
-		expect(
-			formatProperty({ type: "url", url: null } as unknown as Property),
-		).toBe("[No URL]");
+		expect(formatProperty({ type: "url", url: null } as unknown as Property)).toBe("[No URL]");
 		expect(
 			formatProperty({
 				type: "select",

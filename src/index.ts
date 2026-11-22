@@ -20,9 +20,7 @@ async function sendDiscordMessage(
 	webhookToken: string,
 	message: RESTPostAPIWebhookWithTokenJSONBody,
 ) {
-	const url = new URL(
-		`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`,
-	);
+	const url = new URL(`https://discord.com/api/webhooks/${webhookId}/${webhookToken}`);
 	// Non-application-owned webhooks can only send components (our link
 	// button) when this flag is set; link-style buttons don't require an
 	// interaction handler, so this is safe for a plain incoming webhook.

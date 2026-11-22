@@ -34,13 +34,13 @@ Set that URL as a "Send webhook" action in a Notion database automation. Every t
 
 There is no database and no server-side state. Everything is encoded in the URL:
 
-| Part | Where | Description |
-|---|---|---|
-| `{WEBHOOK_ID}` | path | Discord webhook ID from the webhook URL |
-| `{WEBHOOK_TOKEN}` | path | Discord webhook token from the webhook URL |
-| `title` | query | Optional embed title |
+| Part              | Where | Description                                |
+| ----------------- | ----- | ------------------------------------------ |
+| `{WEBHOOK_ID}`    | path  | Discord webhook ID from the webhook URL    |
+| `{WEBHOOK_TOKEN}` | path  | Discord webhook token from the webhook URL |
+| `title`           | query | Optional embed title                       |
 
-Opening a generated URL in the browser pre-fills the generator form again — the URL *is* the settings page.
+Opening a generated URL in the browser pre-fills the generator form again — the URL _is_ the settings page.
 
 ## Supported Notion properties
 
@@ -57,27 +57,28 @@ Or deploy manually:
 ```bash
 git clone https://github.com/nakanoasaservice/notion-to-discord-relay.git
 cd notion-to-discord-relay
-bun install
-bun run deploy
+pnpm install
+pnpm run deploy
 ```
 
 No secrets are needed — authentication lives entirely in the webhook URL.
 
 ## Development
 
-| Command | Description |
-|---------|-------------|
-| `bun run dev` | Start Vite dev server (worker + UI) |
-| `bun run build` | Build worker + static assets |
-| `bun run preview` | Build and preview locally |
-| `bun run deploy` | Build and deploy to Cloudflare Workers |
-| `bun run test` | Run tests |
-| `bun run check` | Lint and format check |
-| `bun run check:fix` | Auto-fix lint and format issues |
-| `bun run check-types` | Type check |
-| `bun run cf-typegen` | Generate Cloudflare binding types |
+| Command                | Description                            |
+| ---------------------- | -------------------------------------- |
+| `pnpm run dev`         | Start Vite dev server (worker + UI)    |
+| `pnpm run build`       | Build worker + static assets           |
+| `pnpm run preview`     | Build and preview locally              |
+| `pnpm run deploy`      | Build and deploy to Cloudflare Workers |
+| `pnpm run test`        | Run tests                              |
+| `pnpm run check`       | Lint and format check                  |
+| `pnpm run check:fix`   | Auto-fix lint and format issues        |
+| `pnpm run check-types` | Type check                             |
+| `pnpm run cf-typegen`  | Generate Cloudflare binding types      |
 
 **Project structure:**
+
 - `src/index.ts` — Main Hono application & Discord webhook integration
 - `src/formatter.ts` — Notion property formatting logic
 - `src/client.tsx` — Client-side webhook URL generator UI
@@ -99,3 +100,30 @@ Contributions are welcome. Please feel free to submit a Pull Request.
 ## Acknowledgments
 
 Built with [Hono](https://hono.dev/), powered by [Cloudflare Workers](https://workers.cloudflare.com/).
+
+## Development toolchain
+
+Use Node.js 24 and the pnpm version pinned in `package.json`.
+Run `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm test`, and `pnpm build`.
+Vite+ provides formatting, linting, type checks, tests and builds. Tests run
+locally in the Cloudflare Workers runtime. Use `pnpm run dev` to develop and
+`pnpm run cf-typegen` to regenerate Worker binding types.
+
+Update Vite+ and its bundled tools together with `vp migrate`, then refresh the
+pnpm lockfile. CI resolves the Vite+ version from the project dependency or catalog
+automatically. Run the project's checks before committing toolchain updates.
+
+### Runtime versions
+
+`package.json` is the source of truth for development Node.js (`devEngines.runtime`)
+and pnpm (`packageManager`). The major versions in `mise.toml` only bootstrap the
+environment. Install the [global Vite+ CLI](https://viteplus.dev/guide/global-cli)
+with environment management enabled, then use `vp install --frozen-lockfile`
+and `vp run <script>` to run with the declared versions. `pnpm` commands also use
+them when the Vite+ shims are active. The project-local CLI alone does not switch
+Node.js versions.
+
+CI reads the same manifest automatically; compatibility-test matrices explicitly
+override Node.js. pnpm runtime management is disabled so it does not override
+Vite+'s selection. Keep any consumer-facing `engines.node` support range separate
+from the development pin.
