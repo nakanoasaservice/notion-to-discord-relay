@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://notion-to-discord-relay.naas.workers.dev/sitemap.xml

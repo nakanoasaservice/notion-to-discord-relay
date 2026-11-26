@@ -1,0 +1,5 @@
+# Generated URLs embed a Discord webhook token: keep them out of search
+# indexes and out of Referer headers sent to linked sites.
+/:webhookId/:webhookToken
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: no-referrer
