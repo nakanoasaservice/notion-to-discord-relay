@@ -81,11 +81,13 @@ function formatRichTextValue(richText: RichTextItemResponse): string {
         case "custom_emoji":
           return `[${richText.mention.custom_emoji.name}](${richText.mention.custom_emoji.url})`;
         default:
+          richText.mention satisfies never;
           return "[Unsupported Mention Type]";
       }
     case "equation":
       return richText.plain_text;
     default:
+      richText satisfies never;
       return `[Unsupported Rich Text Type: ${JSON.stringify(richText, null, 2)}]`;
   }
 }
@@ -180,7 +182,10 @@ export function formatProperty(property: Property): string {
               : "❌";
         case "date":
           return formatDate(property.formula.date);
+        case "unsupported":
+          return "[Unsupported Formula Type]";
         default:
+          property.formula satisfies never;
           return "[Unsupported Formula Type]";
       }
     case "files":
@@ -193,6 +198,7 @@ export function formatProperty(property: Property): string {
               case "external":
                 return `[${file.name}](${file.external.url})`;
               default:
+                file satisfies never;
                 if ("name" in file) {
                   return (file as { name: string }).name;
                 }
@@ -209,7 +215,10 @@ export function formatProperty(property: Property): string {
           return formatDate(property.rollup.date);
         case "array":
           return property.rollup.array?.map(formatProperty).join(", ") ?? "[Empty Rollup Array]";
+        case "unsupported":
+          return "[Unsupported Rollup Type]";
         default:
+          property.rollup satisfies never;
           return "[Unsupported Rollup Type]";
       }
     case "verification":
@@ -233,6 +242,7 @@ export function formatProperty(property: Property): string {
             : `(${property.place.lat}, ${property.place.lon})`
         : "[No Place]";
     default:
+      property satisfies never;
       return `[Unsupported Type: ${JSON.stringify(property, null, 2)}]`;
   }
 }
