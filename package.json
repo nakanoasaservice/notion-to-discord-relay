@@ -17,19 +17,19 @@
     "test": "vp test run"
   },
   "dependencies": {
-    "hono": "^4.13.5"
+    "hono": "^4.13.21"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.54.1",
-    "@cloudflare/vitest-plugin": "^1.8.4",
-    "@notionhq/client": "^5.26.0",
-    "@types/node": "^26.4.0",
-    "discord-api-types": "^0.38.54",
+    "@cloudflare/vite-plugin": "^1.70.1",
+    "@cloudflare/vitest-plugin": "^1.9.1",
+    "@notionhq/client": "^5.31.1",
+    "@types/node": "^26.6.6",
+    "discord-api-types": "^0.38.60",
     "typescript": "^7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "vitest": "catalog:",
-    "wrangler": "^4.127.0"
+    "wrangler": "^4.167.0"
   },
   "devEngines": {
     "runtime": {
