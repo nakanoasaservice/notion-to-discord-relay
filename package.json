@@ -1,41 +1,41 @@
 {
-	"name": "notion-to-discord-relay",
-	"version": "0.0.0",
-	"private": true,
-	"license": "MIT",
-	"type": "module",
-	"scripts": {
-		"build": "vp build",
-		"cf-typegen": "wrangler types",
-		"check-types": "tsc --noEmit",
-		"check:fix": "vp check --fix",
-		"check": "vp check",
-		"deploy": "pnpm run build && wrangler deploy",
-		"dev": "vp dev",
-		"preview": "pnpm run build && vp preview",
-		"start": "wrangler dev",
-		"test": "vp test run"
-	},
-	"dependencies": {
-		"hono": "^4.13.22"
-	},
-	"devDependencies": {
-		"@cloudflare/vite-plugin": "^1.70.2",
-		"@cloudflare/vitest-plugin": "^1.9.2",
-		"@notionhq/client": "^5.32.0",
-		"@types/node": "^26.6.10",
-		"discord-api-types": "^0.38.60",
-		"typescript": "^7.0.2",
-		"vite": "catalog:",
-		"vite-plus": "catalog:",
-		"vitest": "catalog:",
-		"wrangler": "^4.168.0"
-	},
-	"devEngines": {
-		"runtime": {
-			"name": "node",
-			"version": "26.13.1"
-		}
-	},
-	"packageManager": "pnpm@12.23.0"
+  "name": "notion-to-discord-relay",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "vp build",
+    "cf-typegen": "wrangler types",
+    "check-types": "tsc --noEmit",
+    "check:fix": "vp check --fix",
+    "check": "vp check",
+    "deploy": "pnpm run build && wrangler deploy",
+    "dev": "vp dev",
+    "preview": "pnpm run build && vp preview",
+    "start": "wrangler dev",
+    "test": "vp test run"
+  },
+  "dependencies": {
+    "hono": "^4.13.22"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.70.2",
+    "@cloudflare/vitest-plugin": "^1.9.2",
+    "@notionhq/client": "^5.32.0",
+    "@types/node": "^26.6.10",
+    "discord-api-types": "^0.38.60",
+    "typescript": "^7.0.2",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:",
+    "wrangler": "^4.168.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.13.1"
+    }
+  },
+  "packageManager": "pnpm@12.23.0"
 }
