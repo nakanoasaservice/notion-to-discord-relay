@@ -379,6 +379,30 @@ function App() {
       </header>
 
       <main>
+        <aside
+          style={{
+            marginBottom: "3rem",
+            padding: "1rem 1.25rem",
+            backgroundColor: "#eef3fd",
+            border: "1px solid #c9d8f5",
+            borderRadius: "8px",
+          }}
+        >
+          <strong>💡 Don't want to manage a Webhook URL?</strong>
+          <p style={{ margin: "0.5rem 0 0" }}>
+            Try our sister project{" "}
+            <a
+              href="https://notion-to-discord-bot.naas.workers.dev/"
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: "#0066cc", textDecoration: "none", fontWeight: "bold" }}
+            >
+              Notion to Discord Bot
+            </a>
+            . It posts to Discord through a bot, so you only need a channel ID — no webhook to
+            create and no secret token in the URL.
+          </p>
+        </aside>
         <section style={{ marginBottom: "3rem" }}>
           <h2 style={{ borderBottom: "1px solid #eee", paddingBottom: "0.5rem" }}>How it works</h2>
           <p>
