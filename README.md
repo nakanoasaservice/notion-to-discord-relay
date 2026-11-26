@@ -4,6 +4,8 @@ Automatically forward Notion webhook events to Discord channels with beautifully
 
 **🚀 Hosted instance (recommended): <https://notion-to-discord-relay.naas.workers.dev/>**
 
+🤖 Using an AI assistant? Point it at [`/llms.txt`](https://notion-to-discord-relay.naas.workers.dev/llms.txt) — it describes how to turn a Discord webhook URL into the URL for Notion.
+
 Built on [Cloudflare Workers](https://workers.cloudflare.com/) with [Hono](https://hono.dev/). A webhook-based sibling of [notion-to-discord-bot](https://github.com/nakanoasaservice/notion-to-discord-bot), modeled after [notion-to-google-chat-relay](https://github.com/nakanoasaservice/notion-to-google-chat-relay)'s design.
 
 > [!TIP]

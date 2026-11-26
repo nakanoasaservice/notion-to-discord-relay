@@ -1,0 +1,49 @@
+# Notion to Discord Relay
+
+> Free, hosted Cloudflare Worker that posts Notion database automation events to a Discord channel as rich embeds, using a Discord channel webhook. No sign-up, no bot, no server-side state: the whole configuration is encoded in the URL that you paste into Notion.
+
+Hosted instance: https://notion-to-discord-relay.naas.workers.dev/
+
+## How to build the Notion webhook URL
+
+You can construct the URL directly from a Discord webhook URL; no API call or account is needed.
+
+1. Discord webhook URL (created in Discord: channel **Settings → Integrations → Webhooks → New Webhook → Copy Webhook URL**):
+   `https://discord.com/api/webhooks/{WEBHOOK_ID}/{WEBHOOK_TOKEN}`
+2. Take `{WEBHOOK_ID}` and `{WEBHOOK_TOKEN}` from that URL and build:
+   `https://notion-to-discord-relay.naas.workers.dev/{WEBHOOK_ID}/{WEBHOOK_TOKEN}`
+3. Optional: add an embed title as the `title` query parameter, URL-encoded:
+   `https://notion-to-discord-relay.naas.workers.dev/{WEBHOOK_ID}/{WEBHOOK_TOKEN}?title=Task%20Updates`
+4. In Notion, open the database → **Settings → Automations → New automation**, choose a trigger (e.g. "Page added" or "Property edited"), add the action **Send webhook**, and paste the URL. No custom headers are needed.
+
+Example:
+
+- Discord webhook URL: `https://discord.com/api/webhooks/123456789012345678/abcDEF-ghi_JKL`
+- Notion webhook URL: `https://notion-to-discord-relay.naas.workers.dev/123456789012345678/abcDEF-ghi_JKL?title=New%20Tasks`
+
+Notes:
+
+- Webhook URLs from `discordapp.com`, `ptb.discord.com`, or `canary.discord.com` contain the same ID and token; use them the same way.
+- Drop anything after the token in the Discord URL (e.g. `?wait=true` or `/slack`).
+- The generated URL contains the webhook token. Anyone who has it can post to the channel, so treat it as a secret like the Discord webhook URL itself.
+- Opening the generated URL in a browser shows a settings page pre-filled with its values, where the title can be edited.
+
+## What gets posted
+
+Each Notion event becomes one Discord embed with the page's properties as fields (up to 25) and an "Open in Notion" link button. Supported property types include title, rich text, number, select, multi-select, status, date, people, files, checkbox, URL, email, phone, formula, relation, rollup, created/last edited time and by, unique ID, verification, place, and button.
+
+## Endpoint
+
+- `POST /{WEBHOOK_ID}/{WEBHOOK_TOKEN}?title={OPTIONAL_TITLE}`: receives the JSON body of a Notion "Send webhook" automation action and posts it to Discord. Returns `204 No Content` on success.
+- `GET /{WEBHOOK_ID}/{WEBHOOK_TOKEN}?title={OPTIONAL_TITLE}`: the settings / URL generator page.
+
+## Links
+
+- [URL generator](https://notion-to-discord-relay.naas.workers.dev/): paste a Discord webhook URL, get the Notion webhook URL
+- [Source code and README](https://github.com/nakanoasaservice/notion-to-discord-relay): MIT licensed; can be self-hosted on Cloudflare Workers
+- [Notion: Database automations](https://www.notion.com/help/database-automations): how to add a "Send webhook" action
+- [Discord: Intro to Webhooks](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks): how to create a channel webhook
+
+## Optional
+
+- [Notion to Discord Bot](https://notion-to-discord-bot.naas.workers.dev/): sister project that posts through a Discord bot instead of a webhook, so the URL only contains a channel ID
